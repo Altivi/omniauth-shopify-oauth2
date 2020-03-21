@@ -27,11 +27,16 @@ module OmniAuth
         strategy = env['omniauth.strategy']
 
         shopify_auth_params = strategy.session['omniauth.params'] && strategy.session['omniauth.params'].with_indifferent_access
-        shop = if shopify_auth_params && shopify_auth_params['shop']
-          "https://#{shopify_auth_params['shop']}"
-        else
-          ''
-        end
+        shop_param = /[a-zA-Z0-9][a-zA-Z0-9\-]*\.myshopify\.com[\/]?/.match(env["QUERY_STRING"]).to_s
+
+        shop =
+          if shopify_auth_params && shopify_auth_params['shop']
+            "https://#{shopify_auth_params['shop']}"
+          elsif shop_param.present?
+            "https://#{shop_param}"
+          else
+            ''
+          end
 
         strategy.options[:client_options][:site] = shop
       }

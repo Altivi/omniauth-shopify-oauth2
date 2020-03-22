@@ -31,10 +31,10 @@ module OmniAuth
         shop_url = if shopify_auth_params && shopify_auth_params['shop']
           shopify_auth_params['shop']
         elsif env["QUERY_STRING"]
-          env["QUERY_STRING"]
+          CGI::parse(env["QUERY_STRING"]).try(:[], "shop").try(:[], 0)
         end
 
-        shop_domain = /^[a-zA-Z0-9][a-zA-Z0-9\-]*\.myshopify\.com[\/]?/.match(shop_url).to_s
+        shop_domain = /[a-zA-Z0-9][a-zA-Z0-9\-]*\.myshopify\.com?/.match(shop_url).to_s
 
         strategy.options[:client_options][:site] = if shop_domain
           "https://#{shop_domain}"

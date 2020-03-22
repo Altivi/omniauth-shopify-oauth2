@@ -120,7 +120,7 @@ module OmniAuth
         if valid_site?
           super
         else
-          fail!(:invalid_site, CallbackError.new(:invalid_site, options[:client_options][:site])
+          fail!(:invalid_site, CallbackError.new(:invalid_site, options[:client_options][:site]))
         end
       end
 
